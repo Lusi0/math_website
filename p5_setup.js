@@ -66,90 +66,62 @@ function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL);
     cam = createCamera();
     cam.setPosition(0, 0, 500);
+    cam.lookAt(0, 0, 0);
     normalMaterial();
     frameRate(100);
   }
   
 
-framecount = -10;
-
-
-
-function drawAndTranslate(x,y,z,tx,ty,tz){
-    push();
-    translate(tx,ty,tz);
-    box(x,y,z);
-    translate(-tx,-ty,-tz);
-    pop();
-    // reverse the translation
-}
-
-const thin = 0.1;
-
-const default_size = 400;
-
-
-width = 5
-height = 10
+framecount = 0;
 
 
 
 
-let actual_width = 0;
 
-actual_width = default_size * (width/height);
+mywidth = 100
+myheight = 100
+length = box_graph_points(mywidth, myheight)[1];
 
-info = box_graph_points(400,actual_width);
-
-let final_width = actual_width-info[1];
-
-let final_height = default_size - info[1];
-
-
-let final_length = info[1]
 
 
 // fucntion named update_info
 
-function update_info(width,height){
+function update_info(mywidth,myheight){
     // get element with id info
-    // update the text to be the width and height
-    myinfo = box_graph_points(width,height);
-    document.getElementById("info").innerHTML = "area: " + Math.round(myinfo[0]*1000)/1000 + " width: " + Math.round(width*1000)/1000 + " height: " + Math.round(height*1000)/1000 + " length: " +  Math.round(myinfo[1]*1000)/1000;
+    // update the text to be the mywidth and myheight
+    myinfo = box_graph_points(mywidth,myheight);
+    document.getElementById("info").innerHTML = "area: " + Math.round(myinfo[0]*1000)/1000 + " mywidth: " + Math.round(mywidth*1000)/1000 + " height: " + Math.round(myheight*1000)/1000 + " length: " +  Math.round(myinfo[1]*1000)/1000;
 }
-update_info(width,height);
+update_info(mywidth,myheight);
 
 // every time input with id of "width" is changed, the function is called to update the variable width
 document.getElementById("width").addEventListener("change", (event) => {
-    console.log("width changed");
-    width = parseFloat(document.getElementById("width").value);
-    console.log(info, final_width, final_height);
-    actual_width = default_size * (width/height);
-    info = box_graph_points(400,actual_width);
-
-    final_width = actual_width-info[1];
-
-    final_height = default_size - info[1];
-
-    final_length = info[1];
-    console.log(info, final_width, final_height);
-    update_info(width,height);
+    mywidth = parseFloat(document.getElementById("width").value);
+    // if mywidth is NaN, set it to 0
+    if (isNaN(mywidth)){
+        mywidth = 0;
+    }
+    // if mywidth is less than 0, set it to 0
+    if (mywidth < 0){
+        mywidth = 0;
+    }
+    update_info(mywidth,myheight);
+    length = box_graph_points(mywidth, myheight)[1];
 });
 // every time input with id of "height" is changed, the function is called to update the variable height
 document.getElementById("length").addEventListener("change", (event) => {
-    console.log("length changed");
-    console.log(info, final_width, final_height);
-    height = parseFloat(document.getElementById("length").value);
-    actual_width = default_size * (width/height);
-    info = box_graph_points(400,actual_width);
-
-    final_width = actual_width-info[1];
-
-    final_height = default_size - info[1];
-
-    final_length = info[1];
-    console.log(info, final_width, final_height);
-    update_info(width,height);
+    
+    myheight = parseFloat(document.getElementById("length").value);
+    // if myheight is NaN, set it to 0
+    if (isNaN(myheight)){
+        myheight = 0;
+    }
+    // if myheight is less than 0, set it to 0
+    if (myheight < 0){
+        myheight = 0;
+    }
+    update_info(mywidth,myheight);
+    length = box_graph_points(mywidth, myheight)[1];
 });
 
 
@@ -159,33 +131,25 @@ function draw(){
     background(255);
     // set the camera position should be changed to move in a circle using sin and cos
     
-    xy = getXY(framecount, 1000);
 
-    cam.setPosition(xy[0], xy[1], 500);
+
     // log to console current pos
 
-    cam.lookAt(0, 0, 0);
+    
     // make a box
-    drawAndTranslate(final_length,thin,final_width,-final_length/2,final_height/2,0);
-    drawAndTranslate(final_length,thin,final_width,-final_length/2,-final_height/2,0);
-
-
-    drawAndTranslate(final_length,final_height,thin,-final_length/2,0,final_width/2);
-    drawAndTranslate(final_length,final_height,thin,-final_length/2,0,-final_width/2);
-
-
-    // BASE
-    drawAndTranslate(thin,final_height,final_width,0,0,0);
-
+    rotateY(framecount*0.01);
+    rotateX(framecount*0.02);
+    box(mywidth, myheight, length);
+    // rotate the box
     
 
-    framecount+=0.01;
+    framecount+=1;
 }
 
 // javascript fuction that takes in frame count and radious and returns x and y on a circle
-function getXY(framecount, radious){
-    x = radious * cos(framecount);
-    y = radious * sin(framecount);
-    return [x,y];
-}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+  }
+
 
