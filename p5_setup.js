@@ -90,7 +90,7 @@ function update_info(mywidth,myheight){
     // get element with id info
     // update the text to be the mywidth and myheight
     myinfo = box_graph_points(mywidth,myheight);
-    document.getElementById("info").innerHTML = "area: " + Math.round(myinfo[0]*1000)/1000 + " mywidth: " + Math.round(mywidth*1000)/1000 + " height: " + Math.round(myheight*1000)/1000 + " length: " +  Math.round(myinfo[1]*1000)/1000;
+    document.getElementById("info").innerHTML = "area: " + Math.round(myinfo[0]*1000)/1000 + " width: " + Math.round(mywidth*1000)/1000 + " height: " + Math.round(myheight*1000)/1000 + " length: " +  Math.round(myinfo[1]*1000)/1000;
 }
 update_info(mywidth,myheight);
 
